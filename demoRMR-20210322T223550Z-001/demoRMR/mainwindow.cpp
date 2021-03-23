@@ -2,7 +2,17 @@
 #include "ui_mainwindow.h"
 #include <QPainter>
 #include <math.h>
+#include "odometry.cpp"
 
+int flag=0, cnt=0;
+float phiFeedback, distanceFeedback, destinationPhi;
+
+
+struct coordinates{
+    float x;
+    float y;
+    bool flag=false;
+}COORDINATES;
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -60,11 +70,11 @@ void MainWindow::paintEvent(QPaintEvent *event)
             painter.setPen(pero);
             //teraz tu kreslime random udaje... vykreslite to co treba... t.j. data z lidaru
          //   std::cout<<copyOfLaserData.numberOfScans<<std::endl;
-            for(int k=0;k<copyOfLaserData.numberOfScans/*360*/;k++)
+            for(int k=0;k<copyOfLaserData.numberOfScans/*6.2830*/;k++)
             {
                 /*  int dist=rand()%500;
-            int xp=rect.width()-(rect.width()/2+dist*2*sin((360.0-k)*3.14159/180.0))+rect.topLeft().x();
-            int yp=rect.height()-(rect.height()/2+dist*2*cos((360.0-k)*3.14159/180.0))+rect.topLeft().y();*/
+            int xp=rect.width()-(rect.width()/2+dist*2*sin((6.2830.0-k)*3.14159/3.1415.0))+rect.topLeft().x();
+            int yp=rect.height()-(rect.height()/2+dist*2*cos((6.2830.0-k)*3.14159/3.1415.0))+rect.topLeft().y();*/
                 int dist=copyOfLaserData.Data[k].scanDistance/20;
                 int xp=rect.width()-(rect.width()/2+dist*2*sin((360.0-copyOfLaserData.Data[k].scanAngle)*3.14159/180.0))+rect.topLeft().x();
                 int yp=rect.height()-(rect.height()/2+dist*2*cos((360.0-copyOfLaserData.Data[k].scanAngle)*3.14159/180.0))+rect.topLeft().y();
@@ -75,11 +85,13 @@ void MainWindow::paintEvent(QPaintEvent *event)
     }
 }
 
-void  MainWindow::setUiValues(double robotX,double robotY,double robotFi)
+void  MainWindow::setUiValues(double robotX,double robotY,double robotFi, float phiFeedback, float distanceFeedback)
 {
      ui->lineEdit_2->setText(QString::number(robotX));
      ui->lineEdit_3->setText(QString::number(robotY));
      ui->lineEdit_4->setText(QString::number(robotFi));
+     ui->lineEdit_5->setText(QString::number(phiFeedback));
+     ui->lineEdit_6->setText(QString::number(distanceFeedback));
 }
 
 
@@ -87,10 +99,10 @@ void MainWindow::processThisRobot()
 {
 
 
-
     if(datacounter%5)
     {
-        emit uiValuesChanged(robotdata.EncoderLeft,11,12);
+        //emit uiValuesChanged(phiFeedback, distanceFeedback, phi); //tuto treba posielat naše vyrátané veci
+        emit uiValuesChanged(currentX,currentY,float(cnt), phiFeedback, distanceFeedback);
     }
     datacounter++;
 
@@ -108,6 +120,7 @@ void MainWindow::processThisLidar(LaserMeasurement &laserData)
 
 }
 
+
 void MainWindow::on_pushButton_9_clicked() //start button
 {
 
@@ -116,14 +129,14 @@ void MainWindow::on_pushButton_9_clicked() //start button
     robotthreadHandle=CreateThread(NULL,0, robotUDPVlakno, (void *)this,0,&robotthreadID);
     /*  laserthreadID=pthread_create(&laserthreadHandle,NULL,&laserUDPVlakno,(void *)this);
       robotthreadID=pthread_create(&robotthreadHandle,NULL,&robotUDPVlakno,(void *)this);*/
-    connect(this,SIGNAL(uiValuesChanged(double,double,double)),this,SLOT(setUiValues(double,double,double)));
+    connect(this,SIGNAL(uiValuesChanged(double,double,double,float,float)),this,SLOT(setUiValues(double,double,double,float,float)));
 
 }
 
 void MainWindow::on_pushButton_2_clicked() //forward
 {
     //pohyb dopredu
-    std::vector<unsigned char> mess=robot.setTranslationSpeed(500);
+    std::vector<unsigned char> mess=robot.setTranslationSpeed(250);
     if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
     {
 
@@ -142,7 +155,7 @@ void MainWindow::on_pushButton_3_clicked() //back
 void MainWindow::on_pushButton_6_clicked() //left
 {
 
-    std::vector<unsigned char> mess=robot.setRotationSpeed(3.14159/2);
+    std::vector<unsigned char> mess=robot.setRotationSpeed(3.14159/5);
     if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
     {
 
@@ -152,7 +165,7 @@ void MainWindow::on_pushButton_6_clicked() //left
 void MainWindow::on_pushButton_5_clicked()//right
 {
 
-    std::vector<unsigned char> mess=robot.setRotationSpeed(-3.14159/2);
+    std::vector<unsigned char> mess=robot.setRotationSpeed(-3.14159/5);
     if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
     {
 
@@ -223,6 +236,59 @@ void MainWindow::laserprocess()
     }
 }
 
+bool MainWindow::positioning(struct coordinates coordinates)
+{
+    float Pa=0.02, Pd=1000;
+
+    distanceFeedback = sqrt((coordinates.y-currentY)*(coordinates.y-currentY)+(coordinates.x-currentX)*(coordinates.x-currentX));
+
+    destinationPhi = atan((coordinates.y-currentY)/(coordinates.x-currentX))*3.1415/3.1415;
+    if(coordinates.x-currentX<0){
+
+        destinationPhi+=3.1415;}
+    if (destinationPhi > 6.2830){
+        destinationPhi -= 6.2830;}
+    if (destinationPhi < 0){
+        destinationPhi += 6.2830;}
+
+
+    phiFeedback = destinationPhi - phi;
+
+    if(phiFeedback>3.1415)
+       phiFeedback = destinationPhi - (phi + 6.2830);
+    if (abs(phiFeedback)>0.09)
+    {
+        std::vector<unsigned char> mess=robot.setRotationSpeed(0.7*phiFeedback);
+        if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
+        {
+
+        }
+
+    }
+    else
+    {
+        if (abs(distanceFeedback)>0.01)
+        {
+            std::vector<unsigned char> mess=robot.setTranslationSpeed(1200*distanceFeedback);
+            if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
+            {
+
+            }
+
+        }
+        else
+        {
+            std::vector<unsigned char> mess=robot.setTranslationSpeed(0);
+            if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
+            {
+
+            }
+            return true;
+        }
+    }
+    return false;
+
+}
 
 void MainWindow::robotprocess()
 {
@@ -266,6 +332,30 @@ void MainWindow::robotprocess()
 
     }
     unsigned char buff[50000];
+
+    coordinates coor[7];
+
+    coor[0].x=0;
+    coor[0].y=3.5;
+
+    coor[1].x=1.2;
+    coor[1].y=3.5;
+
+    coor[2].x=1.2;
+    coor[2].y=1.4;
+
+    coor[3].x=2.7;
+    coor[3].y=1.4;
+
+    coor[4].x=2.7;
+    coor[4].y=3.5;
+
+    coor[5].x=0;
+    coor[5].y=3.5;
+
+    coor[6].x=0;
+    coor[6].y=0;
+
     while(1)
     {
         memset(buff,0,50000*sizeof(char));
@@ -284,9 +374,17 @@ void MainWindow::robotprocess()
         if(returnval==0)
         {
             processThisRobot();
+            if(cnt<sizeof(coor)/sizeof(coor[0])){
+                if((coor[cnt].flag!=true)){
+
+                    odometry(robotdata.EncoderLeft, robotdata.EncoderRight);
+                    coor[cnt].flag=positioning(coor[cnt]);
+                }else{
+                cnt=cnt+1;
+                }
+            }
+
         }
-
-
     }
 }
 

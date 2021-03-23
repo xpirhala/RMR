@@ -23,6 +23,7 @@
 #include "opencv2/videoio.hpp"
 #include "opencv2/imgcodecs.hpp"*/
 
+
 namespace Ui {
 class MainWindow;
 }
@@ -86,6 +87,7 @@ private slots:
 
     void on_pushButton_clicked();
     void getNewFrame();
+    bool positioning(struct coordinates coordinates);
 
 private:
      JOYINFO joystickInfo;
@@ -102,9 +104,9 @@ private:
 
 
 public slots:
-     void setUiValues(double robotX,double robotY,double robotFi);
+     void setUiValues(double robotX,double robotY,double robotFi,float phiFeedback,float distanceFeedback);
 signals:
-     void uiValuesChanged(double newrobotX,double newrobotY,double newrobotFi); ///toto nema telo
+     void uiValuesChanged(double newrobotX,double newrobotY,double newrobotFi,float phiFeedback,float distanceFeedback); ///toto nema telo
 
 
 };

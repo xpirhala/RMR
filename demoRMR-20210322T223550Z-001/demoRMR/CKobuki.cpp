@@ -80,7 +80,8 @@ int CKobuki::checkChecksum(unsigned char * data)
 
 std::vector<unsigned char> CKobuki::setLed(int led1, int led2)
 {
-    char message[8] = {0xaa,0x55,0x04,0x0c,0x02,0x00,(led1+led2*4)%256,0x00};
+    unsigned char message[8] = {0xaa,0x55,0x04,0x0c,0x02,0x00,(unsigned char)((led1+led2*4)%256),0x00};
+    //unsigned char message[8] = {0xaa,0x55,0x04,0x0c,0x02,0x00,(char)(led1+led2*4)%256,0x00};
     message[7] = message[2] ^ message[3] ^ message[4] ^ message[5] ^ message[6];
     uint32_t pocet;
     std::vector<unsigned char> vystup(message,message+sizeof(message)/sizeof(message[0]));
@@ -92,7 +93,7 @@ std::vector<unsigned char> CKobuki::setLed(int led1, int led2)
 
 std::vector<unsigned char> CKobuki::setTranslationSpeed(int mmpersec)
 {
-    char message[14] = { 0xaa,0x55,0x0A,0x0c,0x02,0xf0,0x00,0x01,0x04,mmpersec%256,mmpersec>>8,0x00,0x00,  0x00 };
+    unsigned char message[14] = { 0xaa,0x55,0x0A,0x0c,0x02,0xf0,0x00,0x01,0x04,(unsigned char)(mmpersec%256),(unsigned char)(mmpersec>>8),0x00,0x00,  0x00 };
     message[13] = message[2] ^ message[3] ^ message[4] ^ message[5] ^ message[6] ^ message[7] ^ message[8] ^ message[9] ^ message[10] ^ message[11] ^ message[12];
 
     uint32_t pocet;
@@ -104,7 +105,7 @@ std::vector<unsigned char> CKobuki::setTranslationSpeed(int mmpersec)
 std::vector<unsigned char> CKobuki::setRotationSpeed(double radpersec)
 {
     int speedvalue = radpersec * 230.0f / 2.0f;
-    char message[14] = { 0xaa,0x55,0x0A,0x0c,0x02,0xf0,0x00,0x01,0x04,speedvalue % 256,speedvalue >>8,0x01,0x00,  0x00 };
+   unsigned char message[14] = { 0xaa,0x55,0x0A,0x0c,0x02,0xf0,0x00,0x01,0x04,(unsigned char)(speedvalue % 256),(unsigned char)(speedvalue >>8),0x01,0x00,  0x00 };
     message[13] = message[2] ^ message[3] ^ message[4] ^ message[5] ^ message[6] ^ message[7] ^ message[8] ^ message[9] ^ message[10] ^ message[11] ^ message[12];
 
     uint32_t pocet;
@@ -120,7 +121,7 @@ std::vector<unsigned char> CKobuki::setArcSpeed(int mmpersec, int radius)
     }
 
     int speedvalue = mmpersec * ((radius + (radius>0? 230:-230) )/ 2 ) / radius;
-    char message[14] = { 0xaa,0x55,0x0A,0x0c,0x02,0xf0,0x00,0x01,0x04,speedvalue % 256,speedvalue >>8,radius % 256,radius >>8,  0x00 };
+    unsigned char message[14] = { 0xaa,0x55,0x0A,0x0c,0x02,0xf0,0x00,0x01,0x04,(unsigned char)(speedvalue % 256),(unsigned char)(speedvalue >>8),(unsigned char)(radius % 256),(unsigned char)(radius >>8),  0x00 };
     message[13] = message[2] ^ message[3] ^ message[4] ^ message[5] ^ message[6] ^ message[7] ^ message[8] ^ message[9] ^ message[10] ^ message[11] ^ message[12];
     uint32_t pocet;
     std::vector<unsigned char> vystup(message,message+sizeof(message)/sizeof(message[0]));
@@ -130,7 +131,7 @@ std::vector<unsigned char> CKobuki::setArcSpeed(int mmpersec, int radius)
 std::vector<unsigned char> CKobuki::setSound(int noteinHz, int duration)
 {
     int notevalue = floor((double)1.0 / ((double)noteinHz*0.00000275) + 0.5);
-    char message[13] = { 0xaa,0x55,0x09,0x0c,0x02,0xf0,0x00,0x03,0x03,notevalue%256,notevalue>>8,duration%256,0x00 };
+    unsigned char message[13] = { 0xaa,0x55,0x09,0x0c,0x02,0xf0,0x00,0x03,0x03,(unsigned char)(notevalue%256),(unsigned char)(notevalue>>8),(unsigned char)(duration%256),0x00 };
     message[12] = message[2] ^ message[3] ^ message[4] ^ message[5] ^ message[6] ^ message[7]^ message[8]^ message[9]^ message[10]^ message[11];
 
     uint32_t pocet;
@@ -142,8 +143,7 @@ std::vector<unsigned char> vystup(message,message+sizeof(message)/sizeof(message
 
 std::vector<unsigned char> CKobuki::setDefaultPID()
 {
-    char message[23] = { 0xaa,0x55,0x13,0x0c,0x02,0xf0,0x00,0x0D,0x0D,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,  0x00 };
-    message[22]=0;
+    unsigned char message[23] = { 0xaa,0x55,0x13,0x0c,0x02,0xf0,0x00,0x0D,0x0D,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,  0x00 };
     for(int i=0;i<23-3;i++)
     {
         message[22]=message[22]^message[i+2];

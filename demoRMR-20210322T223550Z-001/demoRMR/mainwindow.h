@@ -88,6 +88,7 @@ private slots:
     void on_pushButton_clicked();
     void getNewFrame();
     bool positioning(struct coordinates coordinates);
+    void setCoordinates();
 
 private:
      JOYINFO joystickInfo;

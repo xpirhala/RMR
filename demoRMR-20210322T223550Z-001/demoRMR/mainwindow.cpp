@@ -3,16 +3,18 @@
 #include <QPainter>
 #include <math.h>
 #include "odometry.cpp"
+#include <stdlib.h>
 
-int flag=0, cnt=0;
+int numberOfCoordinates;
+int cnt=0;
 float phiFeedback, distanceFeedback, destinationPhi;
-
+coordinates *coor;
 
 struct coordinates{
     float x;
     float y;
     bool flag=false;
-}COORDINATES;
+};
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -102,7 +104,7 @@ void MainWindow::processThisRobot()
     if(datacounter%5)
     {
         //emit uiValuesChanged(phiFeedback, distanceFeedback, phi); //tuto treba posielat naše vyrátané veci
-        emit uiValuesChanged(currentX,currentY,float(cnt), phiFeedback, distanceFeedback);
+        emit uiValuesChanged(currentX,currentY,float(coor[0].y), phiFeedback, distanceFeedback);
     }
     datacounter++;
 
@@ -238,27 +240,51 @@ void MainWindow::laserprocess()
 
 bool MainWindow::positioning(struct coordinates coordinates)
 {
-    float Pa=0.02, Pd=1000;
-
-    distanceFeedback = sqrt((coordinates.y-currentY)*(coordinates.y-currentY)+(coordinates.x-currentX)*(coordinates.x-currentX));
+    //Setting phi
 
     destinationPhi = atan((coordinates.y-currentY)/(coordinates.x-currentX))*3.1415/3.1415;
-    if(coordinates.x-currentX<0){
 
-        destinationPhi+=3.1415;}
+    if(coordinates.x-currentX<0){
+        destinationPhi+=3.1415;
+    }
+
     if (destinationPhi > 6.2830){
-        destinationPhi -= 6.2830;}
+        destinationPhi -= 6.2830;
+    }
+
     if (destinationPhi < 0){
-        destinationPhi += 6.2830;}
+        destinationPhi += 6.2830;
+    }
 
 
     phiFeedback = destinationPhi - phi;
 
     if(phiFeedback>3.1415)
-       phiFeedback = destinationPhi - (phi + 6.2830);
+       phiFeedback = destinationPhi - phi - 6.2830;
+
+    //setting distance feedback
+    distanceFeedback = sqrt((coordinates.y-currentY)*(coordinates.y-currentY)+(coordinates.x-currentX)*(coordinates.x-currentX));
+
+    //regulations+saturations
+        //phi regulator+saturation(2pi)
+    float phiRegulator=0.7*phiFeedback;
+    if(phiRegulator>6.2830){
+        phiRegulator=6.2830;
+    }else if(phiRegulator<-6.2830){
+        phiRegulator=-6.2830;
+    }
+
+        //distance saturation (500 mm/sec)
+   float distanceRegulator=1200*distanceFeedback;
+
+   if(distanceRegulator>500){
+        distanceRegulator=500;
+   }
+
+
     if (abs(phiFeedback)>0.09)
     {
-        std::vector<unsigned char> mess=robot.setRotationSpeed(0.7*phiFeedback);
+        std::vector<unsigned char> mess=robot.setRotationSpeed(phiRegulator);
         if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
         {
 
@@ -269,7 +295,7 @@ bool MainWindow::positioning(struct coordinates coordinates)
     {
         if (abs(distanceFeedback)>0.01)
         {
-            std::vector<unsigned char> mess=robot.setTranslationSpeed(1200*distanceFeedback);
+            std::vector<unsigned char> mess=robot.setTranslationSpeed(distanceRegulator);
             if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
             {
 
@@ -287,6 +313,35 @@ bool MainWindow::positioning(struct coordinates coordinates)
         }
     }
     return false;
+
+}
+void MainWindow::setCoordinates(){
+    //function for setting and adding coordinates to struct - in future live adding to it
+
+    numberOfCoordinates=7;
+
+    coor =  (coordinates *) malloc(sizeof(coordinates)*numberOfCoordinates);
+
+    coor[0].x=0;
+    coor[0].y=3.5;
+
+    coor[1].x=1.2;
+    coor[1].y=3.5;
+
+    coor[2].x=1.2;
+    coor[2].y=1.4;
+
+    coor[3].x=2.7;
+    coor[3].y=1.4;
+
+    coor[4].x=2.7;
+    coor[4].y=3.5;
+
+    coor[5].x=0;
+    coor[5].y=3.5;
+
+    coor[6].x=0;
+    coor[6].y=0;
 
 }
 
@@ -333,28 +388,9 @@ void MainWindow::robotprocess()
     }
     unsigned char buff[50000];
 
-    coordinates coor[7];
 
-    coor[0].x=0;
-    coor[0].y=3.5;
+    setCoordinates();
 
-    coor[1].x=1.2;
-    coor[1].y=3.5;
-
-    coor[2].x=1.2;
-    coor[2].y=1.4;
-
-    coor[3].x=2.7;
-    coor[3].y=1.4;
-
-    coor[4].x=2.7;
-    coor[4].y=3.5;
-
-    coor[5].x=0;
-    coor[5].y=3.5;
-
-    coor[6].x=0;
-    coor[6].y=0;
 
     while(1)
     {
@@ -374,7 +410,7 @@ void MainWindow::robotprocess()
         if(returnval==0)
         {
             processThisRobot();
-            if(cnt<sizeof(coor)/sizeof(coor[0])){
+            if(cnt<numberOfCoordinates){
                 if((coor[cnt].flag!=true)){
 
                     odometry(robotdata.EncoderLeft, robotdata.EncoderRight);

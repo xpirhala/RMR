@@ -104,7 +104,7 @@ void MainWindow::processThisRobot()
     if(datacounter%5)
     {
         //emit uiValuesChanged(phiFeedback, distanceFeedback, phi); //tuto treba posielat naše vyrátané veci
-        emit uiValuesChanged(currentX,currentY,float(coor[0].y), phiFeedback, distanceFeedback);
+        emit uiValuesChanged(currentX,currentY,phi*180/3.1415, phiFeedback, distanceFeedback);
     }
     datacounter++;
 
@@ -283,8 +283,9 @@ bool MainWindow::positioning(struct coordinates coordinates)
    }
 
 
-    if (abs(phiFeedback)>0.09)
+    if ((abs(phiFeedback)>0.09)&&(abs(distanceFeedback)>0.01))
     {
+
         std::vector<unsigned char> mess=robot.setRotationSpeed(phiRegulator);
         if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
         {

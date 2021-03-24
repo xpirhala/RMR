@@ -266,15 +266,16 @@ bool MainWindow::positioning(struct coordinates coordinates)
     distanceFeedback = sqrt((coordinates.y-currentY)*(coordinates.y-currentY)+(coordinates.x-currentX)*(coordinates.x-currentX));
 
     //regulations+saturations
-        //phi regulator+saturation(2pi)
+    //phi regulator+saturation(2pi)
     float phiRegulator=0.7*phiFeedback;
+
     if(phiRegulator>6.2830){
         phiRegulator=6.2830;
     }else if(phiRegulator<-6.2830){
         phiRegulator=-6.2830;
     }
 
-        //distance saturation (500 mm/sec)
+    //distance saturation (500 mm/sec)
    float distanceRegulator=1200*distanceFeedback;
 
    if(distanceRegulator>500){

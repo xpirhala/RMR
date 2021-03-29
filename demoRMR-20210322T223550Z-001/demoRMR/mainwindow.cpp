@@ -115,6 +115,7 @@ void MainWindow::processThisLidar(LaserMeasurement &laserData)
     memcpy( &copyOfLaserData,&laserData,sizeof(LaserMeasurement));
     //tu mozete robit s datami z lidaru.. napriklad najst prekazky, zapisat do mapy. naplanovat ako sa prekazke vyhnut.
     // ale nic vypoctovo narocne - to iste vlakno ktore cita data z lidaru
+    cout<<"laser data "<<laserData.Data[0].scanDistance;
     updateLaserPicture=1;
     update();//tento prikaz prinuti prekreslit obrazovku.. zavola sa paintEvent funkcia
 
@@ -242,7 +243,7 @@ bool MainWindow::positioning(struct coordinates coordinates)
 {
     //Setting phi
 
-    destinationPhi = atan((coordinates.y-currentY)/(coordinates.x-currentX))*3.1415/3.1415;
+    destinationPhi = atan((coordinates.y-currentY)/(coordinates.x-currentX));
 
     if(coordinates.x-currentX<0){
         destinationPhi+=3.1415;
@@ -412,10 +413,12 @@ void MainWindow::robotprocess()
         if(returnval==0)
         {
             processThisRobot();
+            odometry(robotdata.EncoderLeft, robotdata.EncoderRight);
+
             if(cnt<numberOfCoordinates){
                 if((coor[cnt].flag!=true)){
 
-                    odometry(robotdata.EncoderLeft, robotdata.EncoderRight);
+
                     coor[cnt].flag=positioning(coor[cnt]);
                 }else{
                 cnt=cnt+1;

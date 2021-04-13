@@ -5,11 +5,14 @@
 #include "odometry.cpp"
 #include <stdlib.h>
 #include <stdio.h>
+#include <map.h>
 
 int numberOfCoordinates;
 int cnt=0;
 float phiFeedback, distanceFeedback, destinationPhi;
 coordinates *coor;
+bool flag;
+Map maps(5,5,620,620);
 
 struct coordinates{
     float x;
@@ -115,8 +118,14 @@ void MainWindow::processThisLidar(LaserMeasurement &laserData)
 {
     memcpy( &copyOfLaserData,&laserData,sizeof(LaserMeasurement));
     //tu mozete robit s datami z lidaru.. napriklad najst prekazky, zapisat do mapy. naplanovat ako sa prekazke vyhnut.
+
+    if(flag){
+      maps.procesLaserData(laserData,currentX,currentY,phi);
+    }
+
     // ale nic vypoctovo narocne - to iste vlakno ktore cita data z lidaru
-    cout<<"laser data "<<laserData.Data[0].scanDistance;
+
+    //cout<<"laser data "<<laserData.Data[0].scanDistance;
     updateLaserPicture=1;
     update();//tento prikaz prinuti prekreslit obrazovku.. zavola sa paintEvent funkcia
 
@@ -134,7 +143,7 @@ void MainWindow::on_pushButton_9_clicked() //start button
     /*  laserthreadID=pthread_create(&laserthreadHandle,NULL,&laserUDPVlakno,(void *)this);
       robotthreadID=pthread_create(&robotthreadHandle,NULL,&robotUDPVlakno,(void *)this);*/
     connect(this,SIGNAL(uiValuesChanged(double,double,double,float,float)),this,SLOT(setUiValues(double,double,double,float,float)));
-
+    maps.updateMap();
 }
 
 void MainWindow::on_pushButton_2_clicked() //forward
@@ -274,10 +283,9 @@ bool MainWindow::positioning(struct coordinates coordinates)
         distanceRegulator=500;
    }
 
-
     if ((abs(phiFeedback)>0.09)&&(abs(distanceFeedback)>0.01))
     {
-
+    flag=0;
         std::vector<unsigned char> mess=robot.setRotationSpeed(phiRegulator);
         if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
         {
@@ -289,6 +297,7 @@ bool MainWindow::positioning(struct coordinates coordinates)
     {
         if (abs(distanceFeedback)>0.01)
         {
+flag=1;
             std::vector<unsigned char> mess=robot.setTranslationSpeed(distanceRegulator);
             if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
             {
@@ -298,6 +307,7 @@ bool MainWindow::positioning(struct coordinates coordinates)
         }
         else
         {
+            flag=0;
             std::vector<unsigned char> mess=robot.setTranslationSpeed(0);
             if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
             {
@@ -336,6 +346,7 @@ void MainWindow::setCoordinates(){
 
     coor[6].x=0;
     coor[6].y=0;
+
 
 }
 

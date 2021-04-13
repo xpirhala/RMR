@@ -130,7 +130,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 7: _t->on_pushButton_clicked(); break;
         case 8: _t->getNewFrame(); break;
         //case 9: { bool _r = _t->positioning((*reinterpret_cast< coordinates(*)>(_a[1])));
-        //    if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
+          //  if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
         case 10: _t->setCoordinates(); break;
         case 11: _t->setUiValues((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< double(*)>(_a[2])),(*reinterpret_cast< double(*)>(_a[3])),(*reinterpret_cast< float(*)>(_a[4])),(*reinterpret_cast< float(*)>(_a[5]))); break;
         default: ;

@@ -62,13 +62,18 @@ LIBS += -lWinmm
 
 SOURCES += main.cpp\
         mainwindow.cpp \
+    map.cpp \
     odometry.cpp \
     pathCalculation.cpp \
     rplidar.cpp \
     CKobuki.cpp
 
 HEADERS  += mainwindow.h \
+    map.h \
     rplidar.h \
     CKobuki.h
 
 FORMS    += mainwindow.ui
+
+DISTFILES += \
+    example

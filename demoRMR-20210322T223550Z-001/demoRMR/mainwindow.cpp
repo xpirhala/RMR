@@ -4,6 +4,7 @@
 #include <math.h>
 #include "odometry.cpp"
 #include <stdlib.h>
+#include <stdio.h>
 
 int numberOfCoordinates;
 int cnt=0;
@@ -243,19 +244,9 @@ bool MainWindow::positioning(struct coordinates coordinates)
 {
     //Setting phi
 
-    destinationPhi = atan((coordinates.y-currentY)/(coordinates.x-currentX));
+    destinationPhi = atan2((coordinates.y-currentY),(coordinates.x-currentX));
 
-    if(coordinates.x-currentX<0){
-        destinationPhi+=3.1415;
-    }
 
-    if (destinationPhi > 6.2830){
-        destinationPhi -= 6.2830;
-    }
-
-    if (destinationPhi < 0){
-        destinationPhi += 6.2830;
-    }
 
 
     phiFeedback = destinationPhi - phi;

@@ -12,7 +12,7 @@ int cnt=0;
 float phiFeedback, distanceFeedback, destinationPhi;
 coordinates *coor;
 bool flag;
-Map maps(5,5,620,620);
+Map maps(5,5,700,700);
 
 struct coordinates{
     float x;

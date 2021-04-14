@@ -62,8 +62,8 @@ void Map::procesLaserData(LaserMeasurement measurments,float currentX,float curr
 
 
     for(int i=0;i<measurments.numberOfScans;i++){
-      wallX=currentX*100+measurments.Data[i].scanDistance*cos(phi+measurments.Data[i].scanAngle*3.1415/180)/10; //premena jednotiek z m na cm
-      wallY=currentY*100+measurments.Data[i].scanDistance*sin(phi+measurments.Data[i].scanAngle*3.1415/180)/10;
+      wallX=currentX*100+measurments.Data[i].scanDistance*cos(phi-measurments.Data[i].scanAngle*3.1415/180)/10; //premena jednotiek z m na cm
+      wallY=currentY*100+measurments.Data[i].scanDistance*sin(phi-measurments.Data[i].scanAngle*3.1415/180)/10;
 
       int mapPositionX=wallX/5;
       //mapPositionX=mapPositionX*5;
@@ -71,9 +71,11 @@ void Map::procesLaserData(LaserMeasurement measurments,float currentX,float curr
       int mapPositionY=wallY/5;
       //mapPositionY=mapPositionY*5;
        // cout << " x  " << mapPositionX<<"  y  "<<mapPositionY ;
-      if((mapPositionX>0)&&(mapPositionY>0)){
-          this->map[this->arrayY-mapPositionY-5][mapPositionX+5]=3;
-     }
+      //if((mapPositionX>0)&&(mapPositionY>0)){
+          this->map[this->arrayY-mapPositionY-15][mapPositionX+15]=3;
+    // }else {
+    //       cout << " x  " << mapPositionX<<"  y  "<<mapPositionY;
+    //  }
 
     }
 

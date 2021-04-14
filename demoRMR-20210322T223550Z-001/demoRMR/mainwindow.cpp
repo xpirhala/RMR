@@ -119,10 +119,10 @@ void MainWindow::processThisLidar(LaserMeasurement &laserData)
     memcpy( &copyOfLaserData,&laserData,sizeof(LaserMeasurement));
     //tu mozete robit s datami z lidaru.. napriklad najst prekazky, zapisat do mapy. naplanovat ako sa prekazke vyhnut.
 
+/*
     if(flag){
       maps.procesLaserData(laserData,currentX,currentY,phi);
-    }
-
+    }*/
     // ale nic vypoctovo narocne - to iste vlakno ktore cita data z lidaru
 
     //cout<<"laser data "<<laserData.Data[0].scanDistance;

@@ -27,24 +27,23 @@ Map::Map(int resolutionX,int resolutionY,int realX,int realY)
 
 void Map::updateMap(){
 
-    for(int y=0;y<this->arrayY;y++){
-        for(int x=0;x<this->arrayX;x++){
-            map[y][x]=0;
-        }
-    }
+    this->floatingAlgorithm(0,3.5);
     this->writeFile();
-    /*
-    for(int y=0;y<this->arrayY;y++){
-        for(int x=0;x<this->arrayX;x++){
-            cout << map[x][y];
-        }
-        cout << "\n";
-    }*/
+
+}
+
+void Map::floatingAlgorithm(float destinationX,float destinationY){
+    int mapPositionX=destinationX*100/5;
+    int mapPositionY=destinationY*100/5;
+
+    this->map[this->arrayY-mapPositionY-15][mapPositionX+15]=2;
+
+
 }
 
 void Map::writeFile(){
     ofstream myfile;
-    myfile.open("./example.txt");
+    myfile.open("./map.txt");
       if (myfile.is_open())
       {
           for(int y=0;y<this->arrayY;y++){
@@ -62,23 +61,20 @@ void Map::procesLaserData(LaserMeasurement measurments,float currentX,float curr
 
 
     for(int i=0;i<measurments.numberOfScans;i++){
+
         if((measurments.Data[i].scanDistance<3000)&&(measurments.Data[i].scanDistance>0)){
 
 
-      wallX=currentX*100+measurments.Data[i].scanDistance*cos(phi-measurments.Data[i].scanAngle*3.1415/180)/10; //premena jednotiek z m na cm
-      wallY=currentY*100+measurments.Data[i].scanDistance*sin(phi-measurments.Data[i].scanAngle*3.1415/180)/10;
+              wallX=currentX*100+measurments.Data[i].scanDistance*cos(phi-measurments.Data[i].scanAngle*3.1415/180)/10; //premena jednotiek z m na cm
+              wallY=currentY*100+measurments.Data[i].scanDistance*sin(phi-measurments.Data[i].scanAngle*3.1415/180)/10;
 
-      int mapPositionX=wallX/5;
-      //mapPositionX=mapPositionX*5;
+              int mapPositionX=wallX/5;
 
-      int mapPositionY=wallY/5;
-      //mapPositionY=mapPositionY*5;
-       // cout << " x  " << mapPositionX<<"  y  "<<mapPositionY ;
-      //if((mapPositionX>0)&&(mapPositionY>0)){
-          this->map[this->arrayY-mapPositionY-15][mapPositionX+15]=3;
-    // }else {
-    //       cout << " x  " << mapPositionX<<"  y  "<<mapPositionY;
-    //  }
+
+              int mapPositionY=wallY/5;
+
+              this->map[this->arrayY-mapPositionY-15][mapPositionX+15]=1;
+
 }
     }
 

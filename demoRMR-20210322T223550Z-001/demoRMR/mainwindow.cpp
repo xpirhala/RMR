@@ -322,7 +322,7 @@ flag=1;
 void MainWindow::setCoordinates(){
     //function for setting and adding coordinates to struct - in future live adding to it
 
-    numberOfCoordinates=7;
+    numberOfCoordinates=11;
 
     coor =  (coordinates *) malloc(sizeof(coordinates)*numberOfCoordinates);
 
@@ -339,14 +339,25 @@ void MainWindow::setCoordinates(){
     coor[3].y=1.4;
 
     coor[4].x=2.7;
-    coor[4].y=3.5;
+    coor[4].y=0;
 
-    coor[5].x=0;
-    coor[5].y=3.5;
+    coor[5].x=4.8;
+    coor[5].y=0;
 
-    coor[6].x=0;
-    coor[6].y=0;
+    coor[6].x=4.8;
+    coor[6].y=1.4;
 
+    coor[7].x=4.8;
+    coor[7].y=0;
+
+    coor[8].x=2.7;
+    coor[8].y=0;
+
+    coor[9].x=2.7;
+    coor[9].y=3.5;
+
+    coor[10].x=4.8;
+    coor[10].y=3.5;
 
 }
 

@@ -3,8 +3,7 @@
 using namespace std;
 #include <fstream>
 #include <math.h>
-#include<stdio.h>
-#include <stdlib.h>
+
 
 Map::Map(int resolutionX,int resolutionY,int realX,int realY)
 {

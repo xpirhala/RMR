@@ -129,7 +129,6 @@ void MainWindow::processThisLidar(LaserMeasurement &laserData)
 
 
 
-
 }
 
 
@@ -406,7 +405,7 @@ void MainWindow::robotprocess()
 
     setCoordinates();
 
-   // maps.floatingAlgorithm(4.8,0);
+    //maps.floatingAlgorithm(4.8,1.4);
     while(1)
     {
         memset(buff,0,50000*sizeof(char));

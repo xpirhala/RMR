@@ -321,42 +321,45 @@ flag=1;
 void MainWindow::setCoordinates(){
     //function for setting and adding coordinates to struct - in future live adding to it
 
-    numberOfCoordinates=11;
+    numberOfCoordinates=12;
 
     coor =  (coordinates *) malloc(sizeof(coordinates)*numberOfCoordinates);
 
     coor[0].x=0;
-    coor[0].y=3.5;
+    coor[0].y=2.65;
 
-    coor[1].x=1.2;
-    coor[1].y=3.5;
+    coor[1].x=0.65;
+    coor[1].y=2.65;
 
-    coor[2].x=1.2;
-    coor[2].y=1.4;
+    coor[2].x=1.4-0.75;
+    coor[2].y=3.35-0.75;
 
-    coor[3].x=2.7;
-    coor[3].y=1.4;
+    coor[3].x=1.45-0.75;
+    coor[3].y=3.35-0.75;
 
-    coor[4].x=2.7;
-    coor[4].y=0;
+    coor[4].x=1.45-0.75;
+    coor[4].y=1.9-0.75;
 
-    coor[5].x=4.8;
-    coor[5].y=0;
+    coor[5].x=2.95-0.75;
+    coor[5].y=1.9-0.75;
 
-    coor[6].x=4.8;
-    coor[6].y=1.4;
+    coor[6].x=2.95-0.75;
+    coor[6].y=1.8-0.75;
 
-    coor[7].x=4.8;
-    coor[7].y=0;
+    coor[7].x=3-0.75;
+    coor[7].y=1.8-0.75;
 
-    coor[8].x=2.7;
-    coor[8].y=0;
+    coor[8].x=3-0.75;
+    coor[8].y=1.55-0.75;
 
-    coor[9].x=2.7;
-    coor[9].y=3.5;
+    coor[9].x=5.1-0.75;
+    coor[9].y=1.55-0.75;
 
-    coor[10].x=4.8;
-    coor[10].y=3.5;
+    coor[10].x=5.1-0.75;
+    coor[10].y=3.05-0.75;
+
+    coor[11].x=5.55-0.75;
+    coor[11].y=3.05-0.75;
 
 }
 

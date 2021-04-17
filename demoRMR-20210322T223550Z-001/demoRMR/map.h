@@ -10,6 +10,7 @@ class Map
     int arrayX=0;
     int arrayY=0;
     int **map;
+    int **floatingmap;
 public:
     Map(int resolutionX,int resolutionY,int realX,int realY);
 void readMap();
@@ -17,6 +18,8 @@ void readMap();
      void updateMap();
      void procesLaserData(LaserMeasurement measurments,float currentX,float currentY,float phis);
      void floatingAlgorithm(float destinationX,float destinationY);
+    void writeFloatingFile();
+    void findTheWay(float destinationX,float destinationY);
 };
 
 #endif // MAP_H

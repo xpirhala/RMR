@@ -3,7 +3,8 @@
 using namespace std;
 #include <fstream>
 #include <math.h>
-
+#include<stdio.h>
+#include <stdlib.h>
 
 Map::Map(int resolutionX,int resolutionY,int realX,int realY)
 {
@@ -32,18 +33,35 @@ void Map::updateMap(){
 
 }
 
+
+void Map::readMap(){
+    FILE *myfile;
+    char buff[this->arrayX];
+    myfile = fopen("map.txt","r");
+    for(int y=0;y<this->arrayY;y++){
+        fscanf(myfile, "%s", buff);
+        for(int x=0;x<this->arrayX;x++){
+           this->map[y][x]=atoi(&buff[x]);
+        }
+    }
+fclose(myfile);
+this->writeFile();
+}
+
+
 void Map::floatingAlgorithm(float destinationX,float destinationY){
+    this->readMap();
     int mapPositionX=destinationX*100/5;
     int mapPositionY=destinationY*100/5;
 
     this->map[this->arrayY-mapPositionY-15][mapPositionX+15]=2;
 
-
+    writeFile();
 }
 
 void Map::writeFile(){
     ofstream myfile;
-    myfile.open("./map.txt");
+    myfile.open("./mapFloating.txt");
       if (myfile.is_open())
       {
           for(int y=0;y<this->arrayY;y++){

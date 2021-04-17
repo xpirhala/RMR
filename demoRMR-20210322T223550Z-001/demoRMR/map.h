@@ -17,6 +17,7 @@ public:
      void updateMap();
      void procesLaserData(LaserMeasurement measurments,float currentX,float currentY,float phis);
      void floatingAlgorithm(float destinationX,float destinationY);
+     void readMap();
 };
 
 #endif // MAP_H

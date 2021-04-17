@@ -38,9 +38,10 @@ void Map::readMap(){
     string buff;
     ifstream myfile("map.txt");
     for(int y=0;y<this->arrayY;y++){
-        getline (myfile,buff);
+        getline(myfile,buff);
         for(int x=0;x<this->arrayX;x++){
-          this->map[y][x]=buff[x];
+          this->map[y][x]=( int)buff[x];
+            cout << buff[x]<<"  ";
         }
     }
 myfile.close();

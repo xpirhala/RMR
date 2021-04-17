@@ -42,13 +42,17 @@ void Map::readMap(){
     string buff;
     ifstream myfile("rightCoordinates.txt");
     for(int y=0;y<this->arrayY;y++){
+        for(int x=0;x<this->arrayX;x++){
+            this->map[y][x]=0;
+        }
+        }
+
+    for(int y=0;y<this->arrayY;y++){
         getline(myfile,buff);
         for(int x=0;x<this->arrayX;x++){
 
-            if(((int)buff[x]==48)){
 
-                this->map[y][x]=0;
-            }else if ((int)buff[x]==49) {
+           if ((int)buff[x]==49) {
                 this->map[y][x]=1;
                 for(int p=-3;p<7;p++){
                     this->map[y][x+p]=1;
@@ -124,7 +128,7 @@ void Map::findTheWay(float destinationX,float destinationY){
     int endY=arrayY-destinationY*100/5-15;
 int lastDirection=1;
     int direction=1;
-    int numberOfCoordinates=20;
+    int numberOfCoordinates=100;
     int lastCoorIndex=0;
     coordinates pathCoordinate,*pathCoordinates;
     pathCoordinates =  (coordinates *) malloc(sizeof(coordinates)*numberOfCoordinates);
@@ -279,7 +283,7 @@ cout<<"kokot \n";
 }
 void Map::writeFloatingFile(){
     ofstream myfile;
-    myfile.open("./mapFloating.txt");
+    myfile.open("./mapFloatingDeli.txt");
       if (myfile.is_open())
       {
           for(int y=0;y<this->arrayY;y++){

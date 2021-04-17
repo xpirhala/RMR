@@ -326,22 +326,22 @@ void MainWindow::setCoordinates(){
     coor =  (coordinates *) malloc(sizeof(coordinates)*numberOfCoordinates);
 
     coor[0].x=0;
-    coor[0].y=2.65;
+    coor[0].y=2.8;
 
     coor[1].x=0.65;
-    coor[1].y=2.65;
+    coor[1].y=2.8;
 
-    coor[2].x=1.4-0.75;
-    coor[2].y=3.35-0.75;
+    coor[2].x=0.65;
+    coor[2].y=2.75;
 
-    coor[3].x=1.45-0.75;
-    coor[3].y=3.35-0.75;
+    coor[3].x=0.7;
+    coor[3].y=2.75;
 
-    coor[4].x=1.45-0.75;
-    coor[4].y=1.9-0.75;
+    coor[4].x=0.7;
+    coor[4].y=2.65;
 
-    coor[5].x=2.95-0.75;
-    coor[5].y=1.9-0.75;
+    coor[5].x=0.95;
+    coor[5].y=2.65;
 
     coor[6].x=2.95-0.75;
     coor[6].y=1.8-0.75;

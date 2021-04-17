@@ -12,7 +12,7 @@ class Map
     int **map;
 public:
     Map(int resolutionX,int resolutionY,int realX,int realY);
-
+void readMap();
     void writeFile();
      void updateMap();
      void procesLaserData(LaserMeasurement measurments,float currentX,float currentY,float phis);

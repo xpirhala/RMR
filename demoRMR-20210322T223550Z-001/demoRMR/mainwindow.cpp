@@ -119,9 +119,7 @@ void MainWindow::processThisLidar(LaserMeasurement &laserData)
     memcpy( &copyOfLaserData,&laserData,sizeof(LaserMeasurement));
     //tu mozete robit s datami z lidaru.. napriklad najst prekazky, zapisat do mapy. naplanovat ako sa prekazke vyhnut.
 
-    if(flag){
-      maps.procesLaserData(laserData,currentX,currentY,phi);
-    }
+
 
     // ale nic vypoctovo narocne - to iste vlakno ktore cita data z lidaru
 
@@ -143,7 +141,8 @@ void MainWindow::on_pushButton_9_clicked() //start button
     /*  laserthreadID=pthread_create(&laserthreadHandle,NULL,&laserUDPVlakno,(void *)this);
       robotthreadID=pthread_create(&robotthreadHandle,NULL,&robotUDPVlakno,(void *)this);*/
     connect(this,SIGNAL(uiValuesChanged(double,double,double,float,float)),this,SLOT(setUiValues(double,double,double,float,float)));
-    maps.updateMap();
+    //maps.updateMap();
+    maps.floatingAlgorithm(4.8,1.4);
 }
 
 void MainWindow::on_pushButton_2_clicked() //forward

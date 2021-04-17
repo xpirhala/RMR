@@ -120,11 +120,13 @@ void MainWindow::processThisLidar(LaserMeasurement &laserData)
     //tu mozete robit s datami z lidaru.. napriklad najst prekazky, zapisat do mapy. naplanovat ako sa prekazke vyhnut.
 
 
+
     // ale nic vypoctovo narocne - to iste vlakno ktore cita data z lidaru
 
     //cout<<"laser data "<<laserData.Data[0].scanDistance;
     updateLaserPicture=1;
     update();//tento prikaz prinuti prekreslit obrazovku.. zavola sa paintEvent funkcia
+
 
 
 

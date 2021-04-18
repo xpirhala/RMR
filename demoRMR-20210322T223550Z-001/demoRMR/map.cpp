@@ -30,9 +30,9 @@ this->floatingmap[i]=(int *)malloc(this->arrayX*sizeof(int));
 }
 
 void Map::updateMap(){
-
+/*
     this->floatingAlgorithm(0,3.5);
-    this->writeFile();
+    this->writeFile();*/
 
 }
 
@@ -54,7 +54,7 @@ void Map::readMap(){
 
            if ((int)buff[x]==49) {
                 this->map[y][x]=1;
-                for(int p=-3;p<7;p++){
+                for(int p=-4;p<7;p++){
                     this->map[y][x+p]=1;
                 }
 
@@ -71,55 +71,183 @@ myfile.close();
 
 void Map::floatingAlgorithm(float destinationX,float destinationY){
     this->readMap();
+
+
+
     int mapPositionX=destinationX*100/5;
     int mapPositionY=destinationY*100/5;
 
     this->map[this->arrayY-mapPositionY-15][mapPositionX+15]=2;
-    writeFile();
-
     this->floatingmap=this->map;
-for(int p=0;p<10000;p++){
 
-    for(int y=this->arrayY-1;y>=0;y--){
-        for(int x=this->arrayX-1;x>=0;x--){
 
-            if((this->floatingmap[y][x]!=0)&&(this->floatingmap[y][x]!=1)){
 
-              if((this->floatingmap[y+1][x]==0)&&((y+1)<this->arrayY)){
-                  this->floatingmap[y+1][x]=this->floatingmap[y][x]+1;
+    for(int p=0;p<10000;p++){
+        for(int y=this->arrayY-1;y>=0;y--){
+            for(int x=this->arrayX-1;x>=0;x--){
+
+                if((this->floatingmap[y][x]!=0)&&(this->floatingmap[y][x]!=1)){
+
+                      if((this->floatingmap[y+1][x]==0)&&((y+1)<this->arrayY)){
+                          this->floatingmap[y+1][x]=this->floatingmap[y][x]+1;
+                      }
+
+                      if((this->floatingmap[y-1][x]==0)&&((y-1)>0)){
+                          this->floatingmap[y-1][x]=this->floatingmap[y][x]+1;
+                      }
+
+                      if((this->floatingmap[y][x-1]==0)&&((x-1)>0)){
+                          this->floatingmap[y][x-1]=this->floatingmap[y][x]+1;
+                      }
+
+                      if((this->floatingmap[y][x+1]==0)&&((x+1)<this->arrayX)){
+                          this->floatingmap[y][x+1]=this->floatingmap[y][x]+1;
+                      }
               }
 
-              if((this->floatingmap[y-1][x]==0)&&((y-1)>0)){
-                  this->floatingmap[y-1][x]=this->floatingmap[y][x]+1;
-              }
 
-              if((this->floatingmap[y][x-1]==0)&&((x-1)>0)){
-                  this->floatingmap[y][x-1]=this->floatingmap[y][x]+1;
-              }
-
-              if((this->floatingmap[y][x+1]==0)&&((x+1)<this->arrayX)){
-                  this->floatingmap[y][x+1]=this->floatingmap[y][x]+1;
-              }
-          }
-
-
+            }
         }
-    }
-
 }
 
-
-    findTheWay(destinationX,destinationY);
 
     writeFloatingFile();
 
+
+
+    findTheWay(destinationX,destinationY);
+    //writeFloatingFile();
+
 }
+
+
 struct coordinates{
     int x;
     int y;
     bool flag=false;
 };
 
+void Map::findTheWay(float destinationX,float destinationY){
+
+    int pathX=15;
+    int pathY=15;
+
+    int endX=destinationX*100/5;
+    int endY=arrayY-destinationY*100/5-15;
+int lastDirection=1;
+    int direction=1;
+    int numberOfCoordinates=100;
+    int lastCoorIndex=0;
+    coordinates pathCoordinate,*pathCoordinates;
+    pathCoordinates =  (coordinates *) malloc(sizeof(coordinates)*numberOfCoordinates);
+
+
+for(int p=0;p<200;p++){
+//if((pathX!=endX)&&(pathY!=endY)){
+cout<<" chcem vidiet3 "<<floatingmap[pathY][pathX]<<"\n"<<p<<"\n";
+    switch(direction){
+    case 1:
+        if(floatingmap[pathY][pathX]>floatingmap[pathY+1][pathX]){
+            if((floatingmap[pathY+1][pathX]!=0)&&(floatingmap[pathY+1][pathX]!=1)){
+                direction=1;
+                pathCoordinate.x=pathX;
+                pathCoordinate.y=pathY+1;
+                pathY=pathY+1;
+
+                break;
+            }
+        }
+
+    case 2:
+        if(floatingmap[pathY][pathX]>floatingmap[pathY][pathX+1]){
+            if((this->floatingmap[pathY][pathX+1]!=0)&&(this->floatingmap[pathY][pathX+1]!=1)){
+                direction=2;
+                pathCoordinate.x=pathX+1;
+                pathCoordinate.y=pathY;
+                pathX=pathX+1;
+                 cout<<"here";
+                break;
+            }
+        }
+
+    case 3:
+        if(floatingmap[pathY][pathX]>floatingmap[pathY-1][pathX]){
+            if((this->floatingmap[pathY-1][pathX]!=0)&&(this->floatingmap[pathY-1][pathX]!=1)){
+                direction=3;
+                pathCoordinate.x=pathX;
+                pathCoordinate.y=pathY-1;
+                pathY=pathY-1;
+                break;
+            }
+        }
+
+    case 4:
+        if(floatingmap[pathY][pathX]>floatingmap[pathY][pathX-1]){
+            if((this->floatingmap[pathY][pathX-1]!=0)&&(this->floatingmap[pathY][pathX-1]!=1)){
+                direction=4;
+                pathCoordinate.x=pathX-1;
+                pathCoordinate.y=pathY;
+                pathX=pathX-1;
+                break;
+            }
+        }
+     default:
+        if(floatingmap[pathY][pathX]>floatingmap[pathY+1][pathX]){
+            if((this->floatingmap[pathY+1][pathX]!=0)&&(this->floatingmap[pathY+1][pathX]!=1)){
+                direction=1;
+                pathCoordinate.x=pathX;
+                pathCoordinate.y=pathY+1;
+                pathY=pathY+1;
+            }
+        }else if(floatingmap[pathY][pathX]>floatingmap[pathY-1][pathX]){
+            if((this->floatingmap[pathY-1][pathX]!=0)&&(this->floatingmap[pathY-1][pathX]!=1)){
+                direction=3;
+                pathCoordinate.x=pathX;
+                pathCoordinate.y=pathY-1;
+                pathY=pathY-1;
+            }
+        }else if(floatingmap[pathY][pathX]>floatingmap[pathY][pathX+1]){
+            if((this->floatingmap[pathY][pathX+1]!=0)&&(this->floatingmap[pathY][pathX+1]!=1)){
+                direction=2;
+                pathCoordinate.x=pathX+1;
+                pathCoordinate.y=pathY;
+                pathX=pathX+1;
+            }
+        }else if(floatingmap[pathY][pathX]>floatingmap[pathY][pathX-1]){
+            if((this->floatingmap[pathY][pathX-1]!=0)&&(this->floatingmap[pathY][pathX-1]!=1)){
+                direction=4;
+                pathCoordinate.x=pathX-1;
+                pathCoordinate.y=pathY;
+                pathX=pathX-1;
+            }
+        }
+    }
+
+    if(lastDirection==direction){
+        pathCoordinates[lastCoorIndex].x=pathCoordinate.x;
+        pathCoordinates[lastCoorIndex].y=pathCoordinate.y;
+
+    }else{
+         lastCoorIndex=lastCoorIndex+1;
+         pathCoordinates[lastCoorIndex].x=pathCoordinate.x;
+         pathCoordinates[lastCoorIndex].y=pathCoordinate.y;
+
+    }
+
+
+
+
+    lastDirection=direction;
+//}
+}
+//cout<<pathCoordinates[0].x<<"  "<<pathCoordinates[0].y;
+
+for(int i=0;i<=lastCoorIndex;i++){
+    cout<<(pathCoordinates[i].x-15)*5/100.0<<"  "<<(pathCoordinates[i].y-15)*5/100.0 << "\n";
+}
+}
+
+/*
 void Map::findTheWay(float destinationX,float destinationY){
     int pathX=15;
     int pathY=15;
@@ -136,7 +264,7 @@ int lastDirection=1;
 
 
   //  if((pathX!=endX)&&(pathY!=endY)){
-/*
+
     switch(direction){
     case 1:
         if(floatingmap[pathY][pathX]>floatingmap[pathY+1][pathX]){
@@ -198,7 +326,7 @@ int lastDirection=1;
         }
     }
 
-*/
+*//*
     int randomFlag=1;
     for(int p=0;p<1000;p++){
 
@@ -278,9 +406,9 @@ cout<<"kokot \n";
 
     for(int i=0;i<=lastCoorIndex;i++){
         cout<<(pathCoordinates[i].x-15)*5/100.0<<"  "<<(pathCoordinates[i].y-15)*5/100.0 << "\n";
-    }
+    }*/
 
-}
+
 void Map::writeFloatingFile(){
     ofstream myfile;
     myfile.open("./mapFloatingDeli.txt");

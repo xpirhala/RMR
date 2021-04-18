@@ -328,23 +328,23 @@ void MainWindow::setCoordinates(){
     coor[0].x=0;
     coor[0].y=2.8;
 
-    coor[1].x=0.65;
+    coor[1].x=1.35;
     coor[1].y=2.8;
 
-    coor[2].x=0.65;
-    coor[2].y=2.75;
+    coor[2].x=1.35;
+    coor[2].y=1.3;
 
-    coor[3].x=0.7;
-    coor[3].y=2.75;
+    coor[3].x=3.40;
+    coor[3].y=1.3;
 
-    coor[4].x=0.7;
-    coor[4].y=2.65;
+    coor[4].x=3.40;
+    coor[4].y=0.8;
 
-    coor[5].x=0.95;
-    coor[5].y=2.65;
+    coor[5].x=4.8;
+    coor[5].y=0.8;
 
-    coor[6].x=2.95-0.75;
-    coor[6].y=1.8-0.75;
+    coor[6].x=4.8;
+    coor[6].y=1.2;
 
     coor[7].x=3-0.75;
     coor[7].y=1.8-0.75;

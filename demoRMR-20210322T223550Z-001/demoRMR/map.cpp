@@ -6,6 +6,7 @@ using namespace std;
 #include <fstream>
 
 
+
 Map::Map(int resolutionX,int resolutionY,int realX,int realY)
 {
 
@@ -69,7 +70,7 @@ myfile.close();
 }
 
 
-void Map::floatingAlgorithm(float destinationX,float destinationY){
+int Map::floatingAlgorithm(float destinationX,float destinationY){
     this->readMap();
 
 
@@ -77,7 +78,7 @@ void Map::floatingAlgorithm(float destinationX,float destinationY){
     int mapPositionX=destinationX*100/5;
     int mapPositionY=destinationY*100/5;
 
-    this->map[this->arrayY-mapPositionY-15][mapPositionX+15]=2;
+    this->map[mapPositionY+15][mapPositionX+15]=2;
     this->floatingmap=this->map;
 
 
@@ -115,25 +116,21 @@ void Map::floatingAlgorithm(float destinationX,float destinationY){
 
 
 
-    findTheWay(destinationX,destinationY);
+   return findTheWay(destinationX,destinationY);
     //writeFloatingFile();
+
 
 }
 
 
-struct coordinates{
-    int x;
-    int y;
-    bool flag=false;
-};
 
-void Map::findTheWay(float destinationX,float destinationY){
+
+int Map::findTheWay(float destinationX,float destinationY){
 
     int pathX=15;
     int pathY=15;
 
-    int endX=destinationX*100/5;
-    int endY=arrayY-destinationY*100/5-15;
+
 int lastDirection=1;
     int direction=1;
     int numberOfCoordinates=100;
@@ -142,7 +139,7 @@ int lastDirection=1;
     pathCoordinates =  (coordinates *) malloc(sizeof(coordinates)*numberOfCoordinates);
 
 
-for(int p=0;p<200;p++){
+for(int p=0;p<2000;p++){
 //if((pathX!=endX)&&(pathY!=endY)){
 cout<<" chcem vidiet3 "<<floatingmap[pathY][pathX]<<"\n"<<p<<"\n";
     switch(direction){
@@ -240,11 +237,20 @@ cout<<" chcem vidiet3 "<<floatingmap[pathY][pathX]<<"\n"<<p<<"\n";
     lastDirection=direction;
 //}
 }
-//cout<<pathCoordinates[0].x<<"  "<<pathCoordinates[0].y;
+cout<<lastCoorIndex<<" mohykan\n";
 
 for(int i=0;i<=lastCoorIndex;i++){
     cout<<(pathCoordinates[i].x-15)*5/100.0<<"  "<<(pathCoordinates[i].y-15)*5/100.0 << "\n";
 }
+
+
+
+for(int i=0;i<=lastCoorIndex;i++){
+   this->coor[i].x= (pathCoordinates[i].x-15)*5/100.0;
+        this->coor[i].y=(pathCoordinates[i].y-15)*5/100.0;
+}
+
+return lastCoorIndex;
 }
 
 /*

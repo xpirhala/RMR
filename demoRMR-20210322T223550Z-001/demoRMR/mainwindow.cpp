@@ -14,11 +14,7 @@ coordinates *coor;
 bool flag;
 Map maps(5,5,720,520);
 
-struct coordinates{
-    float x;
-    float y;
-    bool flag=false;
-};
+
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -142,7 +138,7 @@ void MainWindow::on_pushButton_9_clicked() //start button
       robotthreadID=pthread_create(&robotthreadHandle,NULL,&robotUDPVlakno,(void *)this);*/
     connect(this,SIGNAL(uiValuesChanged(double,double,double,float,float)),this,SLOT(setUiValues(double,double,double,float,float)));
     //maps.updateMap();
-    maps.floatingAlgorithm(4.8,1.4);
+
 }
 
 void MainWindow::on_pushButton_2_clicked() //forward
@@ -318,6 +314,8 @@ flag=1;
     return false;
 
 }
+
+/*
 void MainWindow::setCoordinates(){
     //function for setting and adding coordinates to struct - in future live adding to it
 
@@ -361,7 +359,8 @@ void MainWindow::setCoordinates(){
     coor[11].x=5.55-0.75;
     coor[11].y=3.05-0.75;
 
-}
+}*/
+
 
 void MainWindow::robotprocess()
 {
@@ -407,9 +406,10 @@ void MainWindow::robotprocess()
     unsigned char buff[50000];
 
 
-    setCoordinates();
+   // setCoordinates();
+    numberOfCoordinates=maps.floatingAlgorithm(4.8,2)+1;
 
-
+    cout<<"numbers "<<numberOfCoordinates;
     while(1)
     {
         memset(buff,0,50000*sizeof(char));
@@ -431,10 +431,10 @@ void MainWindow::robotprocess()
             odometry(robotdata.EncoderLeft, robotdata.EncoderRight);
 
             if(cnt<numberOfCoordinates){
-                if((coor[cnt].flag!=true)){
+                if((maps.coor[cnt].flag!=true)){
+                   // cout<<"\nhele "<<maps.coor[cnt].x;
 
-
-                    coor[cnt].flag=positioning(coor[cnt]);
+                    maps.coor[cnt].flag=positioning(maps.coor[cnt]);
                 }else{
                 cnt=cnt+1;
                 }

@@ -61,10 +61,10 @@ LIBS += -lWinmm
 
 
 SOURCES += main.cpp\
+    coordinates.cpp \
         mainwindow.cpp \
     map.cpp \
     odometry.cpp \
-    pathCalculation.cpp \
     rplidar.cpp \
     CKobuki.cpp
 

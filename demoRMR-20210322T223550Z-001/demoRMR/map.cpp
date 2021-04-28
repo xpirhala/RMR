@@ -141,7 +141,7 @@ int lastDirection=1;
 
 for(int p=0;p<2000;p++){
 //if((pathX!=endX)&&(pathY!=endY)){
-cout<<" chcem vidiet3 "<<floatingmap[pathY][pathX]<<"\n"<<p<<"\n";
+//cout<<" chcem vidiet3 "<<floatingmap[pathY][pathX]<<"\n"<<p<<"\n";
     switch(direction){
     case 1:
         if(floatingmap[pathY][pathX]>floatingmap[pathY+1][pathX]){
@@ -162,7 +162,7 @@ cout<<" chcem vidiet3 "<<floatingmap[pathY][pathX]<<"\n"<<p<<"\n";
                 pathCoordinate.x=pathX+1;
                 pathCoordinate.y=pathY;
                 pathX=pathX+1;
-                 cout<<"here";
+                 //cout<<"here";
                 break;
             }
         }
@@ -237,7 +237,7 @@ cout<<" chcem vidiet3 "<<floatingmap[pathY][pathX]<<"\n"<<p<<"\n";
     lastDirection=direction;
 //}
 }
-cout<<lastCoorIndex<<" mohykan\n";
+//cout<<lastCoorIndex<<" mohykan\n";
 
 for(int i=0;i<=lastCoorIndex;i++){
     cout<<(pathCoordinates[i].x-15)*5/100.0<<"  "<<(pathCoordinates[i].y-15)*5/100.0 << "\n";
@@ -252,168 +252,6 @@ for(int i=0;i<=lastCoorIndex;i++){
 
 return lastCoorIndex;
 }
-
-/*
-void Map::findTheWay(float destinationX,float destinationY){
-    int pathX=15;
-    int pathY=15;
-
-    int endX=destinationX*100/5;
-    int endY=arrayY-destinationY*100/5-15;
-int lastDirection=1;
-    int direction=1;
-    int numberOfCoordinates=100;
-    int lastCoorIndex=0;
-    coordinates pathCoordinate,*pathCoordinates;
-    pathCoordinates =  (coordinates *) malloc(sizeof(coordinates)*numberOfCoordinates);
-
-
-
-  //  if((pathX!=endX)&&(pathY!=endY)){
-
-    switch(direction){
-    case 1:
-        if(floatingmap[pathY][pathX]>floatingmap[pathY+1][pathX]){
-            direction=1;
-            pathCoordinate.x=pathX;
-            pathCoordinate.y=pathY+1;
-            pathY=pathY+1;
-            break;
-        }
-
-    case 2:
-        if(floatingmap[pathY][pathX]>floatingmap[pathY][pathX+1]){
-            direction=2;
-            pathCoordinate.x=pathX+1;
-            pathCoordinate.y=pathY;
-            pathX=pathX+1;
-            break;
-            }
-
-    case 3:
-        if(floatingmap[pathY][pathX]>floatingmap[pathY-1][pathX]){
-            direction=3;
-            pathCoordinate.x=pathX;
-            pathCoordinate.y=pathY-1;
-            pathY=pathY-1;
-            break;
-            }
-
-    case 4:
-        if(floatingmap[pathY][pathX]>floatingmap[pathY][pathX-1]){
-            direction=4;
-            pathCoordinate.x=pathX-1;
-            pathCoordinate.y=pathY;
-            pathX=pathX-1;
-            break;
-            }
-     default:
-        if(floatingmap[pathY][pathX]>floatingmap[pathY+1][pathX]){
-            direction=1;
-            pathCoordinate.x=pathX;
-            pathCoordinate.y=pathY+1;
-            pathY=pathY+1;
-        }else if(floatingmap[pathY][pathX]>floatingmap[pathY-1][pathX]){
-            direction=3;
-            pathCoordinate.x=pathX;
-            pathCoordinate.y=pathY-1;
-            pathY=pathY-1;
-        }else if(floatingmap[pathY][pathX]>floatingmap[pathY][pathX+1]){
-            direction=2;
-            pathCoordinate.x=pathX+1;
-            pathCoordinate.y=pathY;
-            pathX=pathX+1;
-
-        }else if(floatingmap[pathY][pathX]>floatingmap[pathY][pathX-1]){
-            direction=4;
-            pathCoordinate.x=pathX-1;
-            pathCoordinate.y=pathY;
-            pathX=pathX-1;
-        }
-    }
-
-*//*
-    int randomFlag=1;
-    for(int p=0;p<1000;p++){
-
-
-
-
-    if(randomFlag==1){
-
-        if(floatingmap[pathY][pathX]>floatingmap[pathY+1][pathX]){
-             if((this->floatingmap[pathY+1][pathX]!=0)&&(this->floatingmap[pathY+1][pathX]!=1)){
-            direction=1;
-            pathCoordinate.x=pathX;
-            pathCoordinate.y=pathY+1;
-            pathY=pathY+1;
-             randomFlag=0;
-             cout<<" chcem vidiet1 "<<floatingmap[pathY][pathX+1]<<"\n";}
-        }}
-
-        if(randomFlag==1){
-        if(floatingmap[pathY][pathX]>floatingmap[pathY-1][pathX]){
-            if((this->floatingmap[pathY-1][pathX]!=0)&&(this->floatingmap[pathY-1][pathX]!=1)){
-            direction=3;
-            pathCoordinate.x=pathX;
-            pathCoordinate.y=pathY-1;
-            pathY=pathY-1;
-            randomFlag=0;
-            cout<<" chcem vidiet3 "<<floatingmap[pathY][pathX+1]<<"\n";}
-        }}
-
-
-        if(randomFlag==1){
-        if(floatingmap[pathY][pathX]>floatingmap[pathY][pathX+1]){
-            if((this->floatingmap[pathY][pathX+1]!=0)&&(this->floatingmap[pathY][pathX+1]!=1)){
-            direction=2;
-            pathCoordinate.x=pathX+1;
-            pathCoordinate.y=pathY;
-            pathX=pathX+1;
-            randomFlag=0;
-            cout<<" chcem vidiety "<<floatingmap[pathY][pathX+1]<<"\n";
-}
-        }}
-
-        if(randomFlag==1){
-        if(floatingmap[pathY][pathX]>floatingmap[pathY][pathX-1]){
-            if((this->floatingmap[pathY][pathX-1]!=0)&&(this->floatingmap[pathY][pathX-1]!=1)){
-
-            direction=4;
-            pathCoordinate.x=pathX-1;
-            pathCoordinate.y=pathY;
-            pathX=pathX-1;
-            randomFlag=0;}
-        }}
-
-    randomFlag=1;
-        cout<<floatingmap[pathY][pathX]<<"\n";
-
-
-    if(lastDirection==direction){
-        pathCoordinates[lastCoorIndex].x=pathCoordinate.x;
-        pathCoordinates[lastCoorIndex].y=pathCoordinate.y;
-
-    }else{
-         lastCoorIndex=lastCoorIndex+1;
-         pathCoordinates[lastCoorIndex].x=pathCoordinate.x;
-         pathCoordinates[lastCoorIndex].y=pathCoordinate.y;
-         cout<<"kokotisko "<< lastCoorIndex;
-    }
-cout<<" last "<< lastDirection << "  aktual  "<<direction<<"\n";
-cout<<" pathX "<< pathX << "  pathY  "<<pathY<<"\n";
-    lastDirection=direction;
-
- // }
-}
-    cout<<" chcem vidiety "<<floatingmap[68][27]<<"\n";
-cout<<"kokot \n";
-//cout<<pathCoordinates[0].x<<"  "<<pathCoordinates[0].y;
-
-    for(int i=0;i<=lastCoorIndex;i++){
-        cout<<(pathCoordinates[i].x-15)*5/100.0<<"  "<<(pathCoordinates[i].y-15)*5/100.0 << "\n";
-    }*/
-
 
 void Map::writeFloatingFile(){
     ofstream myfile;

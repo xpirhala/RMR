@@ -407,7 +407,7 @@ void MainWindow::robotprocess()
 
 
    // setCoordinates();
-    numberOfCoordinates=maps.floatingAlgorithm(4.8,2)+1;
+    numberOfCoordinates=maps.floatingAlgorithm(4.8,3.3)+1;
 
     cout<<"numbers "<<numberOfCoordinates;
     while(1)

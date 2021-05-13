@@ -9,6 +9,5 @@ struct coordinates{
 struct breakpoints{
     double x;
     double y;
-    int horizont;
-    int vertical;
+    int obchadzanie;
 };

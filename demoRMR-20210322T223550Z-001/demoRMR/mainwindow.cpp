@@ -115,13 +115,12 @@ void MainWindow::processThisLidar(LaserMeasurement &laserData)
 {
     memcpy( &copyOfLaserData,&laserData,sizeof(LaserMeasurement));
     //tu mozete robit s datami z lidaru.. napriklad najst prekazky, zapisat do mapy. naplanovat ako sa prekazke vyhnut.
-    /*if(flag==2){
-    coor[0]=navigation(2.1,3.2, laserData,currentX,currentY,phi);
+ /* if(flag==2){
+    hladacPrekazok(2.7,0.8, laserData,currentX,currentY,phi);
     flag=5;
 }*/
     // ale nic vypoctovo narocne - to iste vlakno ktore cita data z lidaru
 
-    //cout<<"laser data "<<laserData.Data[0].scanDistance;
     updateLaserPicture=1;
     update();//tento prikaz prinuti prekreslit obrazovku.. zavola sa paintEvent funkcia
 
@@ -321,15 +320,18 @@ flag=1;
 void MainWindow::setCoordinates(){
     //function for setting and adding coordinates to struct - in future live adding to it
 
-    numberOfCoordinates=2;
+    numberOfCoordinates=3;
 
     coor =  (coordinates *) malloc(sizeof(coordinates)*numberOfCoordinates);
 
-    coor[0].x=1.85;
-    coor[0].y=1.3;
+    coor[0].x=0.84;
+    coor[0].y=0.20;
 
-    coor[1].x=2.45;
-    coor[1].y=1.3;
+    coor[1].x=1.44;
+    coor[1].y=0.20;
+
+    coor[2].x=2.7;
+    coor[2].y=0.80;
 
 
 }
@@ -400,9 +402,10 @@ void MainWindow::robotprocess()
         int returnval=robot.fillData(robotdata,(unsigned char*)buff);
         if(returnval==0)
         {
+
             processThisRobot();
             odometry(robotdata.EncoderLeft, robotdata.EncoderRight);
-           if(cnt<2){
+           if(cnt<3){
             if((coor[cnt].flag!=true)){
 
                 coor[cnt].flag=positioning(coor[cnt]);
@@ -410,8 +413,8 @@ void MainWindow::robotprocess()
                 cnt=cnt+1;
             }
 
-        }}
-    }
+        }
+    }}
 }
 
 

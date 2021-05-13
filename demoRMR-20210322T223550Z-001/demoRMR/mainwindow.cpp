@@ -6,12 +6,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <map.h>
+#include "navigation.cpp"
 
 int numberOfCoordinates;
 int cnt=0;
 float phiFeedback, distanceFeedback, destinationPhi;
 coordinates *coor;
-bool flag;
+int flag=2;
 Map maps(5,5,720,520);
 
 
@@ -114,9 +115,10 @@ void MainWindow::processThisLidar(LaserMeasurement &laserData)
 {
     memcpy( &copyOfLaserData,&laserData,sizeof(LaserMeasurement));
     //tu mozete robit s datami z lidaru.. napriklad najst prekazky, zapisat do mapy. naplanovat ako sa prekazke vyhnut.
-
-
-
+    /*if(flag==2){
+    coor[0]=navigation(2.1,3.2, laserData,currentX,currentY,phi);
+    flag=5;
+}*/
     // ale nic vypoctovo narocne - to iste vlakno ktore cita data z lidaru
 
     //cout<<"laser data "<<laserData.Data[0].scanDistance;
@@ -302,7 +304,7 @@ flag=1;
         }
         else
         {
-            flag=0;
+            flag=2;
             std::vector<unsigned char> mess=robot.setTranslationSpeed(0);
             if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
             {
@@ -315,51 +317,22 @@ flag=1;
 
 }
 
-/*
+
 void MainWindow::setCoordinates(){
     //function for setting and adding coordinates to struct - in future live adding to it
 
-    numberOfCoordinates=12;
+    numberOfCoordinates=2;
 
     coor =  (coordinates *) malloc(sizeof(coordinates)*numberOfCoordinates);
 
-    coor[0].x=0;
-    coor[0].y=2.8;
+    coor[0].x=1.85;
+    coor[0].y=1.3;
 
-    coor[1].x=1.35;
-    coor[1].y=2.8;
+    coor[1].x=2.45;
+    coor[1].y=1.3;
 
-    coor[2].x=1.35;
-    coor[2].y=1.3;
 
-    coor[3].x=3.40;
-    coor[3].y=1.3;
-
-    coor[4].x=3.40;
-    coor[4].y=0.8;
-
-    coor[5].x=4.8;
-    coor[5].y=0.8;
-
-    coor[6].x=4.8;
-    coor[6].y=1.2;
-
-    coor[7].x=3-0.75;
-    coor[7].y=1.8-0.75;
-
-    coor[8].x=3-0.75;
-    coor[8].y=1.55-0.75;
-
-    coor[9].x=5.1-0.75;
-    coor[9].y=1.55-0.75;
-
-    coor[10].x=5.1-0.75;
-    coor[10].y=3.05-0.75;
-
-    coor[11].x=5.55-0.75;
-    coor[11].y=3.05-0.75;
-
-}*/
+}
 
 
 void MainWindow::robotprocess()
@@ -406,8 +379,8 @@ void MainWindow::robotprocess()
     unsigned char buff[50000];
 
 
-   // setCoordinates();
-    numberOfCoordinates=maps.floatingAlgorithm(4.8,3.3)+1;
+    setCoordinates();
+    //numberOfCoordinates=maps.floatingAlgorithm(4.8,3.3)+1;
 
     cout<<"numbers "<<numberOfCoordinates;
     while(1)
@@ -429,18 +402,15 @@ void MainWindow::robotprocess()
         {
             processThisRobot();
             odometry(robotdata.EncoderLeft, robotdata.EncoderRight);
+           if(cnt<2){
+            if((coor[cnt].flag!=true)){
 
-            if(cnt<numberOfCoordinates){
-                if((maps.coor[cnt].flag!=true)){
-                   // cout<<"\nhele "<<maps.coor[cnt].x;
-
-                    maps.coor[cnt].flag=positioning(maps.coor[cnt]);
-                }else{
+                coor[cnt].flag=positioning(coor[cnt]);
+            }else{
                 cnt=cnt+1;
-                }
             }
 
-        }
+        }}
     }
 }
 

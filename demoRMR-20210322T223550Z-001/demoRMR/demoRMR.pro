@@ -64,6 +64,7 @@ SOURCES += main.cpp\
     coordinates.cpp \
         mainwindow.cpp \
     map.cpp \
+    navigation.cpp \
     odometry.cpp \
     rplidar.cpp \
     CKobuki.cpp

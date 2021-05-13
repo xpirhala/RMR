@@ -5,3 +5,10 @@ struct coordinates{
     double y;
     bool flag=false;
 };
+
+struct breakpoints{
+    double x;
+    double y;
+    int horizont;
+    int vertical;
+};

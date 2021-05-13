@@ -6,7 +6,7 @@ using namespace std;
 #include <fstream>
 #include <map.h>
 #include "mainwindow.h"
-coordinates breakPointcoor[100];
+breakpoints breakPointcoor[100];
 int breakpoints=0;
 
 

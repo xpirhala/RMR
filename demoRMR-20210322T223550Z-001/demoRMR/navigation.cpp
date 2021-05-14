@@ -41,10 +41,17 @@ cout << sqrt((wallX-wallX2)*(wallX-wallX2)+(wallY-wallY2)*(wallY-wallY2))<<"\n\n
                     if(i==laserData.numberOfScans-1){
                         wallX=currentX*100+laserData.Data[i].scanDistance*cos(+phi-laserData.Data[i].scanAngle*3.1415/180)/10; //premena jednotiek z m na cm
                         wallY=currentY*100+laserData.Data[i].scanDistance*sin(+phi-laserData.Data[i].scanAngle*3.1415/180)/10;
-
-                        if((laserData.Data[0].scanDistance<3000)&&(laserData.Data[0].scanDistance>0)){
-                            wallX2=currentX*100+laserData.Data[0].scanDistance*cos(+phi-laserData.Data[0].scanAngle*3.1415/180)/10; //premena jednotiek z m na cm
-                            wallY2=currentY*100+laserData.Data[0].scanDistance*sin(+phi-laserData.Data[0].scanAngle*3.1415/180)/10;
+int index;
+                        for(int z=0;z<laserData.numberOfScans;z++){
+                            if((laserData.Data[z].scanDistance<3000)&&(laserData.Data[z].scanDistance>0)){
+                                index=z;
+                                cout<< "index: "<<index;
+                                break;
+                            }
+                        }
+                        if((laserData.Data[index].scanDistance<3000)&&(laserData.Data[index].scanDistance>0)){
+                            wallX2=currentX*100+laserData.Data[index].scanDistance*cos(+phi-laserData.Data[index].scanAngle*3.1415/180)/10; //premena jednotiek z m na cm
+                            wallY2=currentY*100+laserData.Data[index].scanDistance*sin(+phi-laserData.Data[index].scanAngle*3.1415/180)/10;
                     }}
 
                   if((sqrt((wallX-wallX2)*(wallX-wallX2)+(wallY-wallY2)*(wallY-wallY2)))>60){
@@ -101,12 +108,15 @@ cout << sqrt((wallX-wallX2)*(wallX-wallX2)+(wallY-wallY2)*(wallY-wallY2))<<"\n\n
 
                       breakpoints++;
                       cout<<"velkost "<<breakpoints;
-                  }else if(breakpoints==0){
+                  }/*else if(breakpoints==0){
+
+
+
                       breakPointcoor[breakpoints].x=wallX;
                       breakPointcoor[breakpoints].y=wallY;
                       breakPointcoor[breakpoints].obchadzanie=4;
                       breakpoints++;
-                  }
+                  }*/
                 }else if(laserData.Data[i].scanDistance>0){
                   if(breakpoints>0){
                   if((breakPointcoor[breakpoints-1].x!=wallX) &&( breakPointcoor[breakpoints-1].y!=wallY)){
@@ -165,10 +175,13 @@ breakpoints=0;
 return chosen;
 }
 
-void hladacPrekazok(float destinationX,float destinationY, LaserMeasurement laserData,float currentX,float currentY,float phi){
+void hladacPrekazok(float destinationX,float destinationY, LaserMeasurement laserData,float currentX,float currentY,float phi,struct coordinates coor[3]){
    struct breakpoints edge;
   edge= navigation(destinationX,destinationY,laserData, currentX,currentY,phi);
-  struct coordinates coor[3];
+ // struct coordinates coor[3];
+
+  coor[2].x=destinationX;
+  coor[2].y=destinationY;
 
   switch(edge.obchadzanie){
   case 1:
@@ -193,6 +206,28 @@ void hladacPrekazok(float destinationX,float destinationY, LaserMeasurement lase
           coor[1].x=edge.x-0.30;
       }
       break;
+  case 2:
+     coor[0].x=edge.x+0.30;
+     coor[1].x=edge.x+0.30;
+     if(currentY<destinationY){
+         coor[0].y=edge.y-0.30;
+         coor[1].y=edge.y+0.30;
+     }else{
+         coor[0].y=edge.y+0.30;
+         coor[1].y=edge.y-0.30;
+     }
+     break;
+  case 3:
+     coor[0].x=edge.x+0.30;
+     coor[1].x=edge.x+0.30;
+     if(currentY<destinationY){
+         coor[0].y=edge.y+0.30;
+         coor[1].y=edge.y-0.30;
+     }else{
+         coor[0].y=edge.y-0.30;
+         coor[1].y=edge.y+0.30;
+     }
+     break;
   }
 
   for(int i=0;i<3;i++){

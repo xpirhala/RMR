@@ -11,10 +11,11 @@
 int numberOfCoordinates;
 int cnt=0;
 float phiFeedback, distanceFeedback, destinationPhi;
-coordinates *coor;
+coordinates coor[3],mode1coor;
 int flag=2;
 Map maps(5,5,720,520);
-
+int mode=3;
+float destinationX=1.7, destinationY=2.8;
 
 
 
@@ -97,6 +98,22 @@ void  MainWindow::setUiValues(double robotX,double robotY,double robotFi, float 
      ui->lineEdit_6->setText(QString::number(distanceFeedback));
 }
 
+void checkPath(LaserMeasurement laserData){
+   float distance;
+   distance=sqrt((currentX-destinationX)*(currentX-destinationX)+(currentY-destinationY)*(currentY-destinationY));
+    if(laserData.Data[0].scanDistance<3000){
+       if(laserData.Data[0].scanDistance<distance ){
+           mode=2;
+       }else{
+           mode=1;
+           cout <<"\nbezpecny prejazd";
+       }
+   }else{
+       mode=1;
+       cout <<"\nbezpecny prejazd";
+   }
+
+}
 
 void MainWindow::processThisRobot()
 {
@@ -115,10 +132,15 @@ void MainWindow::processThisLidar(LaserMeasurement &laserData)
 {
     memcpy( &copyOfLaserData,&laserData,sizeof(LaserMeasurement));
     //tu mozete robit s datami z lidaru.. napriklad najst prekazky, zapisat do mapy. naplanovat ako sa prekazke vyhnut.
- /* if(flag==2){
-    hladacPrekazok(2.7,0.8, laserData,currentX,currentY,phi);
-    flag=5;
-}*/
+    if(mode==3){
+    checkPath(laserData);
+    }
+  if(mode==2){
+    hladacPrekazok(destinationX,destinationY, laserData,currentX,currentY,phi,coor);
+    mode=5;
+    cnt=0;
+    cout<<" \n kek"<<coor[2].x;
+}
     // ale nic vypoctovo narocne - to iste vlakno ktore cita data z lidaru
 
     updateLaserPicture=1;
@@ -127,6 +149,8 @@ void MainWindow::processThisLidar(LaserMeasurement &laserData)
 
 
 }
+
+
 
 
 void MainWindow::on_pushButton_9_clicked() //start button
@@ -248,7 +272,9 @@ void MainWindow::laserprocess()
 bool MainWindow::positioning(struct coordinates coordinates)
 {
     //Setting phi
-
+    if(mode!=5){
+        mode=3;
+    }
     destinationPhi = atan2((coordinates.y-currentY),(coordinates.x-currentX));
 
 
@@ -281,7 +307,7 @@ bool MainWindow::positioning(struct coordinates coordinates)
 
     if ((abs(phiFeedback)>0.09)&&(abs(distanceFeedback)>0.01))
     {
-    flag=0;
+
         std::vector<unsigned char> mess=robot.setRotationSpeed(phiRegulator);
         if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
         {
@@ -293,14 +319,17 @@ bool MainWindow::positioning(struct coordinates coordinates)
     {
         if (abs(distanceFeedback)>0.01)
         {
-flag=1;
+
+
+
+if(mode==1 || mode==5){
             std::vector<unsigned char> mess=robot.setTranslationSpeed(distanceRegulator);
             if (sendto(rob_s, (char*)mess.data(), sizeof(char)*mess.size(), 0, (struct sockaddr*) &rob_si_posli, rob_slen) == -1)
             {
 
             }
 
-        }
+        }}
         else
         {
             flag=2;
@@ -316,7 +345,7 @@ flag=1;
 
 }
 
-
+/*
 void MainWindow::setCoordinates(){
     //function for setting and adding coordinates to struct - in future live adding to it
 
@@ -334,7 +363,7 @@ void MainWindow::setCoordinates(){
     coor[2].y=0.80;
 
 
-}
+}*/
 
 
 void MainWindow::robotprocess()
@@ -381,9 +410,10 @@ void MainWindow::robotprocess()
     unsigned char buff[50000];
 
 
-    setCoordinates();
+   // setCoordinates();
     //numberOfCoordinates=maps.floatingAlgorithm(4.8,3.3)+1;
-
+    mode1coor.x=destinationX;
+    mode1coor.y=destinationY;
     cout<<"numbers "<<numberOfCoordinates;
     while(1)
     {
@@ -405,16 +435,25 @@ void MainWindow::robotprocess()
 
             processThisRobot();
             odometry(robotdata.EncoderLeft, robotdata.EncoderRight);
-           if(cnt<3){
+
+               if(mode==5){
+                   if(cnt<3){
             if((coor[cnt].flag!=true)){
 
                 coor[cnt].flag=positioning(coor[cnt]);
             }else{
+
+
+
                 cnt=cnt+1;
             }
 
-        }
-    }}
+        }}else if(mode==1){
+                  if( mode1coor.flag !=true){
+               mode1coor.flag=positioning(mode1coor);}
+               }
+           }
+    }
 }
 
 

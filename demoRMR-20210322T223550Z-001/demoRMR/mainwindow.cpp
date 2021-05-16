@@ -14,8 +14,8 @@ float phiFeedback, distanceFeedback, destinationPhi;
 coordinates coor[3],mode1coor;
 int flag=2;
 Map maps(5,5,720,520);
-int mode=3;
-float destinationX=1.7, destinationY=2.8;
+int mode=2;
+float destinationX=1.7, destinationY=0.80;
 
 
 

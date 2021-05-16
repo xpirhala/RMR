@@ -108,7 +108,7 @@ int index;
 
                       breakpoints++;
                       cout<<"velkost "<<breakpoints;
-                  }/*else if(breakpoints==0){
+                  }else if(breakpoints==0){
 
 
 
@@ -116,7 +116,7 @@ int index;
                       breakPointcoor[breakpoints].y=wallY;
                       breakPointcoor[breakpoints].obchadzanie=4;
                       breakpoints++;
-                  }*/
+                  }
                 }else if(laserData.Data[i].scanDistance>0){
                   if(breakpoints>0){
                   if((breakPointcoor[breakpoints-1].x!=wallX) &&( breakPointcoor[breakpoints-1].y!=wallY)){
@@ -154,23 +154,23 @@ int index;
     float new_distance,old_distance=100000;
 cout<<"velkost "<<breakpoints;
      for(int y=0;y<breakpoints;y++){
-          cout << "\nbreakpoints x:" << breakPointcoor[y].x <<"y:  " << breakPointcoor[y].y << " distance  "<< new_distance;
+
          if((breakPointcoor[y].x>0)&&((breakPointcoor[y].y>0))){
         new_distance=sqrt((currentX-fabs(breakPointcoor[y].x))*(currentX-fabs(breakPointcoor[y].x))+(currentY-fabs(breakPointcoor[y].y))*(currentY-fabs(breakPointcoor[y].y)))+sqrt((fabs(breakPointcoor[y].x)-destinationX)*(fabs(breakPointcoor[y].x)-destinationX)+(fabs(breakPointcoor[y].y)-destinationY)*(fabs(breakPointcoor[y].y)-destinationY));
-
+cout << "\nbreakpoints x:" << breakPointcoor[y].x <<"y:  " << breakPointcoor[y].y << " distance  "<< new_distance;
         if(new_distance<old_distance){
             chosen.x=breakPointcoor[y].x/100;
             chosen.y=breakPointcoor[y].y/100;
             old_distance=new_distance;
             chosen.obchadzanie=breakPointcoor[y].obchadzanie;
- cout << "\nbreakpoints x:" << chosen.x <<"y:  " << chosen.y << "smer obchadzania "<<breakPointcoor[y].obchadzanie;
+// cout << "\nbreakpoints x:" << chosen.x <<"y:  " << chosen.y << "smer obchadzania "<<breakPointcoor[y].obchadzanie;
         }
      }
      }
 
 
 
-     cout << "breakpoints x:" << chosen.x <<"y:  " << chosen.y << "  cur "<<destinationX << "  "<<destinationY;
+     cout << "\n final breakpoint x:" << chosen.x <<"y:  " << chosen.y << "  cur "<<destinationX << "  "<<destinationY;
 breakpoints=0;
 return chosen;
 }
